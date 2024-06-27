@@ -78,7 +78,7 @@ const Accounts = () => {
         <Table mt={5}>
           <Thead>
             <Tr>
-              <Th>Index</Th>
+              <Th>Nº</Th>
               <Th>Key</Th>
               <Th>Cargo</Th>
               <Th>Ações</Th>
