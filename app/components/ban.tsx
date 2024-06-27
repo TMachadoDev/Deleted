@@ -115,7 +115,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
             <Table mt="10px" variant="simple">
                 <Thead>
                     <Tr>
-                        <Th>Index</Th>
+                        <Th>Nº</Th>
                         <Th>Player</Th>
                         <Th>Expire</Th>
                         <Th>Ações</Th>
@@ -124,7 +124,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
                 <Tbody>
                     {bans.map((ban, index) => (
                         <Tr key={index}>
-                            <Td>{index}</Td>
+                            <Td>{index+1}</Td>
                             <Td>{ban.player}</Td>
                             <Td>{new Date(ban.expire * 1000).toLocaleString()}</Td>
                             <Td>

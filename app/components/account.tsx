@@ -78,7 +78,7 @@ const Accounts = () => {
         <Table mt={5}>
           <Thead>
             <Tr>
-              <Th>Index</Th>
+              <Th>Nº</Th>
               <Th>Key</Th>
               <Th>Cargo</Th>
               <Th>Ações</Th>
@@ -87,7 +87,7 @@ const Accounts = () => {
           <Tbody>
             {users.map((user, index) => (
               <Tr key={index}>
-                <Td>{index}</Td>
+                <Td>{index+1}</Td>
                 <Td>{user.name}</Td>
                 <Td>{user.role}</Td>
                 <Td>

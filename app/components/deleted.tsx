@@ -122,7 +122,7 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
             <Table mt="10px" variant="simple">
                 <Thead>
                     <Tr>
-                        <Th>Index</Th>
+                        <Th>Nº</Th>
                         <Th>Player</Th>
                         <Th>Criado em </Th>
                         <Th>Ações</Th>
@@ -131,7 +131,7 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
                 <Tbody>
                     {bans.map((ban, index) => (
                         <Tr key={index}>
-                            <Td>{index}</Td>
+                            <Td>{index+1}</Td>
                             <Td>{ban.player}</Td>
                             <Td>{ban.createdAt}</Td>
                             <Td>
