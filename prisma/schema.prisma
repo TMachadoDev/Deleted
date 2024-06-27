@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Bans table
+model Bans {
+  id         String    @id @default(uuid())
+  player     String   @unique
+  world      String
+  reason     String
+  characters String
+  proof      String
+  createdAt  DateTime  @default(now())
+  expire     Int       // Store expire as an integer (Unix timestamp in seconds)
+}
+
+// Expired table
+model Expired {
+  id         String    @id @default(uuid())
+  player     String @unique
+  world      String
+  reason     String
+  characters String
+  proof      String
+  createdAt  DateTime
+  deletedAt  DateTime  @default(now())
+}
+
+// Fdp table
+model Fdp {
+  id         String    @id @default(uuid())
+  player     String    @unique
+  world      String
+  reason     String
+  characters String
+  proof      String
+  createdAt  DateTime  @default(now())
+}
+
+// DeletedPlayers table
+model DeletedPlayers {
+  id         String    @id @default(uuid())
+  player     String   @unique
+  world      String
+  reason     String
+  characters String
+  proof      String
+  createdAt  DateTime  @default(now())
+}
+
+model Accounts {
+  name String @unique
+  role String
+}
