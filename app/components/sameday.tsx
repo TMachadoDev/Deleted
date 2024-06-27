@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, Box, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, Box, Spinner, Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { api } from "../services/api";
 
 const fetchBans = async () => {
   try {
     const res = await api.get('/getday');
-    console.log("🚀 ~ fetchBans ~ return res.data.result[0].bans:", res.data.result[0].bans);
-    // Ensure the response structure is as expected
-    if (res.data && res.data.result && res.data.result[0] && res.data.result[0].bans) {
-      return res.data.result[0].bans;
-    } else {
-      throw new Error("Unexpected response format");
-    }
+    return res.data.bans;
   } catch (error) {
     console.error("Error fetching bans:", error);
     throw error;
@@ -56,6 +50,7 @@ export function SameDay() {
 
   return (
     <Box p="5">
+      <Button onClick={() => fetchBans()}>Refresh</Button>
       <Table variant="simple">
         <Thead>
           <Tr>
