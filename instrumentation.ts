@@ -1,7 +1,21 @@
-import {prisma} from '@/app/services/prisma';
-import axios from 'axios'
+import { prisma } from '@/app/services/prisma';
+import axios from 'axios';
 
+// Define the setTimeout_ function (if not already defined)
+function setTimeout_(fn: () => void, delay: number, ...args: any[]): NodeJS.Timeout {
+    const maxDelay = Math.pow(2, 31) - 1;
 
+    if (delay > maxDelay) {
+        setTimeout(function () {
+            //@ts-ignore
+            setTimeout_.apply(undefined, [fn, delay - maxDelay].concat(args));
+        }, maxDelay);
+        //@ts-ignore
+        return;
+    }
+//@ts-ignore
+    return setTimeout(fn, delay, ...args);
+}
 
 const processActiveBans = async () => {
     const activeBans = await prisma.bans.findMany();
@@ -9,21 +23,22 @@ const processActiveBans = async () => {
     for (const ban of activeBans) {
         const { player, world, reason, characters, expire } = ban;
 
-        // Calcular o tempo restante até a expiração do banimento
-        const currentTime = Math.floor(Date.now() / 1000); // Tempo atual em segundos
+        // Calculate time remaining until ban expiration
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
         const timeRemaining = expire - currentTime;
 
-        // Apenas configurar o timeout se o banimento ainda não tiver expirado
+        // Only set the timeout if the ban has not expired yet
         if (timeRemaining > 0) {
-            setTimeout(async () => {
+            setTimeout_(async () => {
                 await handleBanExpiration(ban);
             }, timeRemaining * 1000);
         } else {
-            // Processar imediatamente os banimentos já expirados
+            // Process immediately if ban has already expired
             await handleBanExpiration(ban);
         }
     }
 };
+
 const handleBanExpiration = async (ban: any) => {
     const { player, world, reason, characters, expire } = ban;
     try {
@@ -64,13 +79,13 @@ const handleBanExpiration = async (ban: any) => {
         });
 
         // Check if the ban record already exists in the expired table
-      const existingBan = await prisma.expired.findMany({
-      where: {
-        player: ban.player,
-    },
-});
+        const existingBan = await prisma.expired.findMany({
+            where: {
+                player: ban.player,
+            },
+        });
 
-        if (!existingBan) {
+        if (!existingBan || existingBan.length === 0) {
             await prisma.expired.create({
                 data: {
                     player,
@@ -93,7 +108,6 @@ const handleBanExpiration = async (ban: any) => {
     }
 };
 
-
 export async function register() {
-        processActiveBans();
+    processActiveBans();
 }
