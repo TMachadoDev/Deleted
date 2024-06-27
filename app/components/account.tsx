@@ -78,16 +78,16 @@ const Accounts = () => {
         <Table mt={5}>
           <Thead>
             <Tr>
-              <Th>Nº</Th>
+              <Th>Index</Th>
               <Th>Key</Th>
               <Th>Cargo</Th>
               <Th>Ações</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {users.map((user, index) => (
-              <Tr key={index}>
-                <Td>{index+1}</Td>
+            {users.slice().reverse().map((user, index) => (
+            <Tr key={users.length - index}>
+                <Td>{users.length - index}</Td>
                 <Td>{user.name}</Td>
                 <Td>{user.role}</Td>
                 <Td>

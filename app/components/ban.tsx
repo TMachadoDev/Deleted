@@ -37,7 +37,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
     const fetchBans = async () => {
             try {
                 const res = await api.get('/getbans');
-                setBans(res.data.result.reverse());
+                setBans(res.data.result);
             } catch (error) {
                 console.error('Error fetching bans:', error);
             }
@@ -122,20 +122,20 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {bans.map((ban, index) => (
-                        <Tr key={index}>
-                            <Td>{index+1}</Td>
-                            <Td>{ban.player}</Td>
-                            <Td>{new Date(ban.expire * 1000).toLocaleString()}</Td>
-                            <Td>
-                                <ButtonGroup>
-                                    <Button onClick={() => handleRowClick(ban)}>Detalhes</Button>
-                                    <Button onClick={() => handleDelete(ban)}>Deletar</Button>
-                                    <Button onClick={() => handleExclude(ban)}>Excluir</Button>
-                                </ButtonGroup>
-                            </Td>
-                        </Tr>
-                    ))}
+                   {bans.slice().reverse().map((ban, index) => (
+            <Tr key={bans.length - index}>
+                <Td>{bans.length - index}</Td>
+                <Td>{ban.player}</Td>
+                <Td>{new Date(ban.expire * 1000).toLocaleString()}</Td>
+                <Td>
+                    <ButtonGroup>
+                        <Button onClick={() => handleRowClick(ban)}>Detalhes</Button>
+                        <Button onClick={() => handleDelete(ban)}>Deletar</Button>
+                        <Button onClick={() => handleExclude(ban)}>Excluir</Button>
+                    </ButtonGroup>
+                </Td>
+            </Tr>
+        ))}
                 </Tbody>
             </Table>
 

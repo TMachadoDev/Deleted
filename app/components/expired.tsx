@@ -35,7 +35,7 @@ const Expired: React.FC<BanProps> = ({owner}) => {
      const fetchExpired = async () => {
             try {
                 const res = await api.get('/getexpired');
-                setBans(res.data.result.reverse());;
+                setBans(res.data.result);;
             } catch (error) {
                 console.error('Error fetching bans:', error);
             }
@@ -127,9 +127,9 @@ const Expired: React.FC<BanProps> = ({owner}) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {bans.map((ban, index) => (
-                        <Tr key={index}>
-                            <Td>{index+1}</Td>
+                    {bans.slice().reverse().map((ban, index) => (
+            <Tr key={bans.length - index}>
+                <Td>{bans.length - index}</Td>
                             <Td>{ban.player}</Td>
                             <Td>{ban.createdAt}</Td>
                             <Td>

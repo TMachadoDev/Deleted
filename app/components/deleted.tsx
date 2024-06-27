@@ -40,7 +40,7 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
        const fetchDel = async () => {
             try {
                 const res = await api.get('/getdel');
-                setBans(res.data.result.reverse());
+                setBans(res.data.result);
             } catch (error) {
                 console.error('Error fetching bans:', error);
             }
@@ -129,9 +129,9 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {bans.map((ban, index) => (
-                        <Tr key={index}>
-                            <Td>{index+1}</Td>
+                 {bans.slice().reverse().map((ban, index) => (
+            <Tr key={bans.length - index}>
+                <Td>{bans.length - index}</Td>
                             <Td>{ban.player}</Td>
                             <Td>{ban.createdAt}</Td>
                             <Td>
