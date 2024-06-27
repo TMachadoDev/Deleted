@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td, Box, Spinner, Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { api } from "../services/api";
 
-const fetchBans = async () => {
-  try {
-    const res = await api.get('/getday');
-    return res.data.bans;
-  } catch (error) {
-    console.error("Error fetching bans:", error);
-    throw error;
-  }
-};
+
 
 interface Props {
   id: string;
@@ -27,16 +19,20 @@ export function SameDay() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchBans = async () => {
+    try {
+    setLoading(true)
+    const res = await api.get('/getday');
+    setBansData(res.data.bans.reverse());
+    setLoading(false);
+  } catch (error) {
+    console.error("Error fetching bans:", error);
+    throw error;
+  }
+};
+
   useEffect(() => {
     fetchBans()
-      .then((data) => {
-        setBansData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false);
-      });
   }, []);
 
   if (loading) {
@@ -50,7 +46,7 @@ export function SameDay() {
 
   return (
     <Box p="5">
-      <Button onClick={() => fetchBans()}>Refresh</Button>
+      <Button onClick={fetchBans}>Refresh</Button>
       <Table variant="simple">
         <Thead>
           <Tr>
