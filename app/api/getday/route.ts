@@ -1,5 +1,3 @@
-// Importar o Prisma Client
-// Função para tratar a requisição GET
 import { NextResponse as res } from "next/server";
 import { prisma } from '@/app/services/prisma';
 import dayjs from 'dayjs';
@@ -14,58 +12,47 @@ function formatDate(timestamp: number, tz: string) {
   return dayjs.unix(timestamp).tz(tz).format('YYYY-MM-DD');
 }
 
-// Função para obter todos os bans que expiram no mesmo dia
-async function getBansExpiringOnSameDay() {
-  const timezone = 'America/Sao_Paulo'; // Substitua pelo timezone desejado
+// Função para obter todos os bans que expiram até o fim do dia (no timezone especificado)
+async function getBansExpiringToday() {
+  const timezone = 'America/Sao_Paulo'; // Fuso horário do Brasil
 
-  // Obter todos os bans do Prisma
-  const bans = await prisma.bans.findMany();
+  // Data de hoje no fuso horário do Brasil
+  const today = dayjs().tz(timezone);
 
-  // Criar um mapa para armazenar bans por data de expiração
-  const bansByExpiryDate = new Map();
+  // Data do final do dia (23:59:59) no fuso horário do Brasil
+  const endOfDay = today.endOf('day');
 
-  bans.forEach(ban => {
-    const expiryDate = formatDate(ban.expire, timezone);
-
-    if (!bansByExpiryDate.has(expiryDate)) {
-      bansByExpiryDate.set(expiryDate, []);
-    }
-
-    bansByExpiryDate.get(expiryDate).push(ban);
-  });
-
-  // Filtrar os bans que expiram no mesmo dia
-  const result: { expiryDate: any; bans: any; }[] = [];
-  bansByExpiryDate.forEach((bans, expiryDate) => {
-    if (bans.length > 1) {
-      result.push({ expiryDate, bans });
+  // Obter todos os bans do Prisma que expiram até o final do dia de hoje
+  const bans = await prisma.bans.findMany({
+    where: {
+      expire: {
+        lte: endOfDay.unix(), // Considerar bans que expirem até o final do dia de hoje
+      }
     }
   });
 
-  return result;
+  return bans;
 }
-
-
 
 export async function GET() {
   try {
-    const result = await getBansExpiringOnSameDay();
+    const bans = await getBansExpiringToday();
 
-    return res.json({ result }, {
+    return res.json({ bans }, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Adjust the origin as necessary
+        'Access-Control-Allow-Origin': '*', // Ajuste conforme necessário
         'Access-Control-Allow-Methods': 'GET,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
     });
   } catch (error: any) {
-    return res.json({ message: 'something went wrong: ' + error.message }, {
+    return res.json({ message: 'Something went wrong: ' + error.message }, {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Adjust the origin as necessary
+        'Access-Control-Allow-Origin': '*', // Ajuste conforme necessário
         'Access-Control-Allow-Methods': 'GET,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
