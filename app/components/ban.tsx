@@ -37,7 +37,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
     const fetchBans = async () => {
             try {
                 const res = await api.get('/getbans');
-                setBans(res.data.result);
+                setBans(res.data.result.reverse());
             } catch (error) {
                 console.error('Error fetching bans:', error);
             }
@@ -115,6 +115,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
             <Table mt="10px" variant="simple">
                 <Thead>
                     <Tr>
+                        <Th>Index</Th>
                         <Th>Player</Th>
                         <Th>Expire</Th>
                         <Th>Ações</Th>
@@ -123,6 +124,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
                 <Tbody>
                     {bans.map((ban, index) => (
                         <Tr key={index}>
+                            <Td>{index}</Td>
                             <Td>{ban.player}</Td>
                             <Td>{new Date(ban.expire * 1000).toLocaleString()}</Td>
                             <Td>

@@ -22,7 +22,7 @@ const Accounts = () => {
   const fetchAdmins = async () => {
     try {
       const response = await api.get('/admins');
-      setUsers(response.data.result);
+      setUsers(response.data.result.reverse());
     } catch (error) {
       console.error("Error fetching admins:", error);
     } finally {
@@ -78,6 +78,7 @@ const Accounts = () => {
         <Table mt={5}>
           <Thead>
             <Tr>
+              <Th>Index</Th>
               <Th>Key</Th>
               <Th>Cargo</Th>
               <Th>Ações</Th>
@@ -86,6 +87,7 @@ const Accounts = () => {
           <Tbody>
             {users.map((user, index) => (
               <Tr key={index}>
+                <Td>{index}</Td>
                 <Td>{user.name}</Td>
                 <Td>{user.role}</Td>
                 <Td>

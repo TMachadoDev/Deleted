@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/app/services/prisma';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { api } from '@/app/services/api';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+
 
 interface Props {
     player: string;
@@ -30,40 +26,24 @@ export async function POST(req: Request) {
       }, });
         }
 
-        const now = dayjs().tz('America/Sao_Paulo');
-        const expireDate = now.add(duration, 'second');
-        const expireDateUnix = expireDate.unix();
-
-        const result = await prisma.expired.findFirst({
+        const result = await prisma.expired.delete({
             where: {
                 id: player
             }
         })
 
-        if (!result) {
-            return NextResponse.json({ message: 'Character Not Found' }, { status: 404,  headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      }, });
-            
-        }
+        const newresult = await api.post('/addban', {
+            player: result.player,
+            world: result.world,
+            duration: duration,
+            proof: result.proof,
+            reason: result.reason,
+            characters: result.characters,
 
-        const newBan = await prisma.bans.create({
-             data: {
-                 player: result?.player,
-                 world: result.world ,
-                 reason: result?.reason,
-                 characters: result?.characters,
-                 proof: result?.proof,
-                 expire: expireDateUnix,
-             }
-        });
-
-
+        })
+        
         return NextResponse.json({
-            result, expireDateUnix, expireDate, duration, now
+            newresult,
          }, { status: 201,  headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*', // Adjust the origin as necessary
