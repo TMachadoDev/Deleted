@@ -65,7 +65,7 @@ const AddBan: React.FC<AddBanProps> = () => {
       const result = await api.post('/character', { name: name });
       setCharacter(result.data);
       setDisable(true);
-      if (result.status == 404) {
+      if (world == "" && characters == "") {
         toast.error("Personagem Não Encontrado")
       } else {
         toast.success("Encontrado com sucesso!");
