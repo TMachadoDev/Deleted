@@ -10,6 +10,7 @@ interface Props {
     id: string;
     player: string;
     world: string;
+    characters: string;
     expire: number;
     reason: string;
     proof: string;
@@ -32,6 +33,7 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
         world: '',
         reason: '',
         createdAt: '',
+        characters:'',
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -157,6 +159,7 @@ const Deleted: React.FC<BanProps> = ({owner}) => {
                                 <p><strong>Prova:</strong> {selectedBan.proof}</p>
                                 <p><strong>Motivo:</strong> {selectedBan.reason}</p>
                                 <p><strong>Criado em:</strong> {selectedBan.createdAt}</p>
+                                <p><strong>Characters:</strong> {selectedBan.characters}</p>
                                 {/* Add more details as needed */}
                             </div>
                         )}

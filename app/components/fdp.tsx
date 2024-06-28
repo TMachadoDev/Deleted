@@ -13,6 +13,7 @@ interface Props {
     reason: string;
     proof: string;
     createdAt: string;
+    characters: string;
 }
 
 interface BanProps {
@@ -27,6 +28,7 @@ const Fdp: React.FC<BanProps> = ({owner}) => {
         player: '',
         expire: 0,
         proof: '',
+        characters: '',
         world: '',
         reason: '',
         createdAt: '',
@@ -152,6 +154,7 @@ const Fdp: React.FC<BanProps> = ({owner}) => {
                                 <p><strong>Prova:</strong> {selectedBan.proof}</p>
                                 <p><strong>Motivo:</strong> {selectedBan.reason}</p>
                                 <p><strong>Criado em:</strong> {selectedBan.createdAt}</p>
+                                <p><strong>Characters:</strong> {selectedBan.characters}</p>
                             </div>
                         )}
                     </ModalBody>

@@ -11,6 +11,7 @@ interface Props {
     expire: number;
     reason: string;
     proof: string;
+    characters: string;
     createdAt: string;
 }
 interface BanProps {
@@ -25,6 +26,7 @@ const Expired: React.FC<BanProps> = ({owner}) => {
         expire: 0,
         proof: '',
         world: '',
+        characters: '',
         reason: '',
         createdAt: '',
     });
@@ -158,6 +160,7 @@ const Expired: React.FC<BanProps> = ({owner}) => {
                                 <p><strong>Prova:</strong> {selectedBan.proof}</p>
                                 <p><strong>Motivo:</strong> {selectedBan.reason}</p>
                                 <p><strong>Criado em:</strong> {selectedBan.createdAt}</p>
+                                <p><strong>Characters:</strong> {selectedBan.characters}</p>
                             </div>
                         )}
                     </ModalBody>

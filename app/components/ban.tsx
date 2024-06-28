@@ -12,6 +12,7 @@ interface Props {
     reason: string;
     proof: string;
     createdAt: string;
+    characters: string;
 }
 
 interface BanProps {
@@ -22,6 +23,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
     const [bans, setBans] = useState<Props[]>([]);
     const [selectedBan, setSelectedBan] = useState<Props>({
         id: '',
+        characters: '',
         player: '',
         expire: 0,
         proof: '',
@@ -153,6 +155,7 @@ const Ban: React.FC<BanProps> = ({ owner }) => {
                                 <p><strong>Prova:</strong> {selectedBan.proof}</p>
                                 <p><strong>Motivo:</strong> {selectedBan.reason}</p>
                                 <p><strong>Criado em:</strong> {selectedBan.createdAt}</p>
+                                <p><strong>Characters:</strong> {selectedBan.characters}</p>
                             </div>
                         )}
                     </ModalBody>
