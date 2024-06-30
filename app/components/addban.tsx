@@ -1,9 +1,18 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { Box, FormControl, FormLabel, Input, ButtonGroup, Button, InputGroup, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  ButtonGroup,
+  Button,
+  InputGroup,
+  Textarea,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -28,12 +37,12 @@ const AddBan: React.FC<AddBanProps> = () => {
     world: "",
     characters: [],
   });
-  const [name, setName] = useState<string>('');
-  const [world, setWorld] = useState<string>('');
-  const [proof, setProof] = useState<string>('');
-  const [reason, setReason] = useState<string>('');
-  const [duration, setDuration] = useState<string>('');
-  const [characters, setCharacters] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [world, setWorld] = useState<string>("");
+  const [proof, setProof] = useState<string>("");
+  const [reason, setReason] = useState<string>("");
+  const [duration, setDuration] = useState<string>("");
+  const [characters, setCharacters] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [disable, setDisable] = useState<boolean>(false);
 
@@ -42,7 +51,7 @@ const AddBan: React.FC<AddBanProps> = () => {
     const durationSeconds = Math.floor(durationMs / 1000);
 
     try {
-      const result = await api.post('/addban', {
+      const result = await api.post("/addban", {
         player: name,
         world: world,
         reason: reason,
@@ -62,17 +71,10 @@ const AddBan: React.FC<AddBanProps> = () => {
   const getCharacter = async () => {
     setLoading(true);
     try {
-      const result = await api.post('/character', { name: name });
+      const result = await api.post("/character", { name: name });
       setCharacter(result.data);
       setDisable(true);
-      if (world == "" && characters == "") {
-        toast.error("Personagem Não Encontrado")
-      } else {
-        toast.success("Encontrado com sucesso!");
-      }
     } catch (error: any) {
-      console.error("Erro ao obter informações do personagem:", error);
-      toast.error("Algo deu errado.");
     } finally {
       setLoading(false);
     }
@@ -80,9 +82,12 @@ const AddBan: React.FC<AddBanProps> = () => {
 
   useEffect(() => {
     if (character && Object.keys(character).length > 0) {
-      setName(character.characterName || '');
-      setWorld(character.world || '');
-      let textarea = character.characters?.map(char => `${char.name} - ${char.world}`).join('\n') || '';
+      setName(character.characterName || "");
+      setWorld(character.world || "");
+      let textarea =
+        character.characters
+          ?.map((char) => `${char.name} - ${char.world}`)
+          .join("\n") || "";
       setCharacters(textarea);
     }
   }, [character]);
@@ -90,28 +95,75 @@ const AddBan: React.FC<AddBanProps> = () => {
   return (
     <>
       <Toaster position="top-right" />
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <FormControl width="100%">
           <FormLabel>Nome do Player</FormLabel>
           <InputGroup>
-            <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Nome do Player" type="text" />
-            <Button isLoading={loading} disabled={disable} onClick={getCharacter} variant="outline" ml="5px">Procurar</Button>
+            <Input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Nome do Player"
+              type="text"
+            />
+            <Button
+              isLoading={loading}
+              disabled={disable}
+              onClick={() => {
+                toast.promise(getCharacter(), {
+                  loading: "Procurando...",
+                  success: <b>Encontrado com sucesso!</b>,
+                  error: <b>Algo deu errado.</b>,
+                });
+              }}
+              variant="outline"
+              ml="5px"
+            >
+              Procurar
+            </Button>
           </InputGroup>
 
           <FormLabel mt="15px">Mundo</FormLabel>
-          <Input value={world} onChange={(event) => setWorld(event.target.value)} placeholder="Mundo" type="text" />
+          <Input
+            value={world}
+            onChange={(event) => setWorld(event.target.value)}
+            placeholder="Mundo"
+            type="text"
+          />
 
           <FormLabel mt="15px">Prova</FormLabel>
-          <Input value={proof} onChange={(event) => setProof(event.target.value)} placeholder="Prova" type="url" />
+          <Input
+            value={proof}
+            onChange={(event) => setProof(event.target.value)}
+            placeholder="Prova"
+            type="url"
+          />
 
           <FormLabel mt="15px">Motivo</FormLabel>
-          <Input value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Motivo" type="text" />
+          <Input
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+            placeholder="Motivo"
+            type="text"
+          />
 
           <FormLabel mt="15px">Duração</FormLabel>
-          <Input value={duration} onChange={(event) => setDuration(event.target.value)} placeholder="1d, 1h, 1m, etc." type="text" />
+          <Input
+            value={duration}
+            onChange={(event) => setDuration(event.target.value)}
+            placeholder="1d, 1h, 1m, etc."
+            type="text"
+          />
 
           <FormLabel mt="15px">Characters</FormLabel>
-          <Textarea value={characters} onChange={(event) => setCharacters(event.target.value)} />
+          <Textarea
+            value={characters}
+            onChange={(event) => setCharacters(event.target.value)}
+          />
 
           <ButtonGroup mt="10px">
             <Button onClick={handleSubmit}>Banir</Button>
